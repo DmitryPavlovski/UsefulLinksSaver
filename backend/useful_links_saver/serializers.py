@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Todo
+from .models import Link, GroupLinks
 
-class TodoSerializer(serializers.ModelSerializer):
+class LinkSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Todo
-    fields = ('id', 'title', 'description', 'completed')
+    model = Link
+    fields = ('id', 'title', 'description', 'groupId', 'url')
+
+class GroupLinksSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = GroupLinks
+    fields = ('id', 'title')

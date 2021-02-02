@@ -1,8 +1,12 @@
 from django.contrib import admin
-from .models import Todo
+from .models import Link, GroupLinks
 
-class TodoAdmin(admin.ModelAdmin):
-  list_display = ('title', 'description', 'completed')
+class LinkAdmin(admin.ModelAdmin):
+  list_display = ['title', 'description', 'groupId', 'url']
 
-admin.site.register(Todo, TodoAdmin)
+class GroupLinksAdmin(admin.ModelAdmin):
+  list_display = ['title']
+
+admin.site.register(Link, LinkAdmin)
+admin.site.register(GroupLinks, GroupLinksAdmin)
  

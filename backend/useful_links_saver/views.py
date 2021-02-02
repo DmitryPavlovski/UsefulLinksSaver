@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import TodoSerializer
-from .models import Todo
+from .serializers import LinkSerializer, GroupLinksSerializer
+from .models import Link, GroupLinks
 
-class TodoView(viewsets.ModelViewSet):
-  serializer_class = TodoSerializer
-  queryset = Todo.objects.all()
+class LinkView(viewsets.ModelViewSet):
+  serializer_class = LinkSerializer
+  queryset = Link.objects.all()
+
+class GroupLinksView(viewsets.ModelViewSet):
+  serializer_class = GroupLinksSerializer
+  queryset = GroupLinks.objects.all()

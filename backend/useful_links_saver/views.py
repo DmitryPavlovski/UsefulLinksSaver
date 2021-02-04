@@ -5,8 +5,8 @@ from .models import Link, GroupLinks
 
 class LinkView(viewsets.ModelViewSet):
   serializer_class = LinkSerializer
-  queryset = Link.objects.all()
+  queryset = Link.objects.order_by('-createdOn')
 
 class GroupLinksView(viewsets.ModelViewSet):
   serializer_class = GroupLinksSerializer
-  queryset = GroupLinks.objects.all()
+  queryset = GroupLinks.objects.order_by('-createdOn')

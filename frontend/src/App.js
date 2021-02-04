@@ -1,12 +1,17 @@
 import React, { Component } from "react";
-import Modal from "./components/Modal";
+import AddLinkModal from "./components/AddLinkModal";
+import GroupSideBar from "./components/GroupSideBar";
 import axios from "axios";
+import Iframe from 'react-iframe'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGroupId: null,
+      activeGroupItem: {
+        title:"",
+        id:null
+      },
       activeItem: {
         title: "",
         description: "",
@@ -14,45 +19,30 @@ class App extends Component {
         groupId: ""
       },
       linkList: [],
-      groupLinksList:[]
+      groupLinksList:[],
+      ifraimeUrl : ""
     };
   }
   componentDidMount() {
     this.refreshList();
   }
-  refreshList = () => {
-    axios
-      .get("api/links/")
-      .then(res => this.setState({ linkList: res.data }))
-      .catch(err => console.log(err));
-    axios
-      .get("api/groups_links/")
-      .then(res => this.setState({ groupLinksList: res.data }))
-      .catch(err => console.log(err));
+    refreshList = () => {
+        axios
+            .get("api/links/")
+            .then(res => this.setState({ linkList: res.data }))
+            .catch(err => console.log(err));
+        axios
+            .get("api/groups_links/")
+            .then(res => this.setState({ groupLinksList: res.data }))
+            .catch(err => console.log(err));
   };
-  displayGroup = groupId => {    
-    return this.setState({ viewGroupId: groupId });    
-  };
-  renderTabList = () => {    
-    return (
-      <div className="my-5 tab-list">
-        {
-          this.state.groupLinksList.map(item => (
-            <span onClick={() => this.displayGroup(item.id)} className={this.state.viewGroupId === item.id ? "active" : ""}>
-              {item.title}
-            </span>
-          ))
-        }
-        <span onClick={() => this.displayGroup(null)} className={this.state.viewGroupId === null ? "active" : ""}>
-          Other
-        </span>
-      </div>
-    );
+  displayGroup = item => {    
+    return this.setState({ activeGroupItem: item });    
   };
   renderItems = () => {
-    const { viewGroupId } = this.state;
+    const { activeGroupItem } = this.state;
     const newItems = this.state.linkList.filter(
-      item => item.groupId === viewGroupId
+      item => item.groupId === activeGroupItem.id
     );
     return newItems.map(item => (
       <li
@@ -64,31 +54,37 @@ class App extends Component {
           title={item.description}
         >
           {item.title} |
-          <a href={item.url}>{item.url}</a>
+          <a key={item.id} href={item.url} target="_blank" rel="noopener noreferrer">{item.url}</a>
         </span>
         <span>
           <button
-            onClick={() => this.editItem(item)}
+            onClick={() => this.editLinkItem(item)}
             className="btn btn-secondary mr-2"
           >
             {" "}
             Edit{" "}
           </button>
           <button
-            onClick={() => this.handleDelete(item)}
+            onClick={() => this.handleLinkDelete(item)}
             className="btn btn-danger"
           >
             Delete{" "}
+          </button>
+          <button
+            onClick={() => this.handlePreview(item)}
+            className="btn btn-link mr-2"
+          >
+            Preview{" "}
           </button>
         </span>
       </li>
     ));
   };
-  toggle = () => {
-    this.setState({ modal: !this.state.modal });
+  toggleAddLinkModal = () => {
+    this.setState({ addLinkModal: !this.state.addLinkModal });
   };
-  handleSubmit = item => {
-    this.toggle();
+  handleLinkSubmit = item => {
+    this.toggleAddLinkModal();    
     if (item.id) {
       axios
         .put(`api/links/${item.id}/`, item)
@@ -99,45 +95,61 @@ class App extends Component {
       .post("api/links/", item)
       .then(res => this.refreshList());
   };
-  handleDelete = item => {
+  handleLinkDelete = item => {
     axios
       .delete(`api/links/${item.id}`)
       .then(res => this.refreshList());
   };
-  createItem = () => {
-    const item = { title: "", description: "", groupId:"", url:"" };
-    this.setState({ activeItem: item, modal: !this.state.modal });
+  handlePreview = item => {
+    this.setState({ ifraimeUrl : item.url});
+  }
+  createLinkItem = () => {
+    const item = { title: "", description: "", groupId:this.state.activeGroupItem.id, url:"" };
+    this.setState({ activeItem: item, addLinkModal: !this.state.addLinkModal });
   };
-  editItem = item => {
-    this.setState({ activeItem: item, modal: !this.state.modal });
+  editLinkItem = item => {
+    this.setState({ activeItem: item, addLinkModal: !this.state.addLinkModal });
   };
   render() {
     return (
       <main className="content">
-        <h1 className="text-white text-uppercase text-center my-4">Links app</h1>
-        <div className="row ">
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-              <div className="">
-                <button onClick={this.createItem} className="btn btn-primary">
-                  Add link
-                </button>
+        <div className="d-flex wrapper">
+          <GroupSideBar
+            setGroup={this.displayGroup}/>
+          <div id="content">
+            <div className="row ">
+              <div className="col-md-6 col-sm-10 mx-auto p-0">
+                <div className="card p-3">
+                  <div className="">
+                    <button onClick={this.createLinkItem} className="btn btn-primary">
+                      Add link
+                    </button>
+                  </div>              
+                  <ul className="list-group list-group-flush">
+                    {this.renderItems()}
+                  </ul>
+                </div>
               </div>
-              {this.renderTabList()}
-              <ul className="list-group list-group-flush">
-                {this.renderItems()}
-              </ul>
             </div>
+            {this.state.addLinkModal ? (
+              <AddLinkModal
+                activeItem={this.state.activeItem}
+                groupLinksList={this.state.groupLinksList}
+                toggle={this.toggleAddLinkModal}
+                onSave={this.handleLinkSubmit}
+              />
+            ) : null}            
+            {this.state.ifraimeUrl ? (
+              <Iframe url={this.state.ifraimeUrl}
+              width="450px"
+              height="450px"
+              id="myId"
+              className="myClassname"
+              display="initial"
+              position="relative"/>
+            ) : null}
           </div>
         </div>
-        {this.state.modal ? (
-          <Modal
-            activeItem={this.state.activeItem}
-            groupLinksList={this.state.groupLinksList}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
-          />
-        ) : null}
       </main>
     );
   }

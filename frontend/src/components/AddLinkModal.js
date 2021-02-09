@@ -26,7 +26,7 @@ export default class AddLinkModal extends Component {
     };
     renderGroupList = () => {
         return this.state.groupList.map(item => (
-            <option value={item.id}>{item.title}</option>
+            <option key={item.id} value={item.id}>{item.title}</option>
         ));
     }
     render() {
@@ -68,13 +68,13 @@ export default class AddLinkModal extends Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="groupId">Group</Label>
-                            <select value={this.state.activeItem.groupId}
+                            <select value={this.state.activeItem.groupId || ""}
                                 name="groupId"
                                 onChange={this.handleChange}
                                 placeholder="Choose group"
-                                class="custom-select custom-select-sm">
+                                className="custom-select custom-select-sm">
                                 {this.renderGroupList()}
-                                <option value="" selected>----</option>
+                                <option value="">----</option>
                             </select>
                         </FormGroup>
                     </Form>

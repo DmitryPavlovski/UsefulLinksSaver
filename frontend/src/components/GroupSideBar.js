@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import AddGroupModal from "./AddGroupModal";
 import axios from "axios";
-import {PlusCircleFill, PencilSquare, X} from 'react-bootstrap-icons';
+import { PlusCircle, PencilSquare, X } from 'react-bootstrap-icons';
+import '../App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default class GroupSideBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeItem: {
-            title:"",
-            id:null
+                title: "",
+                id: null
             },
-            groupList:[]
+            groupList: []
         };
     }
-    componentDidMount() {
+    componentDidMount() {        
         this.refreshList();
     }
     refreshList = () => {
@@ -22,36 +25,35 @@ export default class GroupSideBar extends Component {
             .get("api/groups_links/")
             .then(res => this.setState({ groupList: res.data }))
             .catch(err => console.log(err));
+        this.props.refreshList();
     };
     displayGroup = item => {
         this.setState({ activeItem: item });
-        const {setGroup} = this.props;
+        const { setGroup } = this.props;
         return setGroup(item);
     };
     renderTabList = () => {
 
         return (
-            <div className="my-5 tab-list">
-            {
-                this.state.groupList.map(item => (
-                <span key={item.id.toString()} className={"list-group-item list-group-item-action bg-light" + this.state.activeItem.id === item.id ? " active" : ""} onClick={() => this.displayGroup(item)}>
-                    {item.title}{" "}
-                    {this.state.activeItem.id === item.id ? (
-                    <div className="d-inline">
-                        <PencilSquare onClick={() => this.editGroupItem(item)}/>
-                        <X onClick={() => this.handleGroupDelete(item)}/>
-                    </div>
-                    ) : null}
-                    
-                </span>
-                ))
-            }
-            <span className={"list-group-item list-group-item-action bg-light" + this.state.activeItem.id === null ? " active" : ""}onClick={() => this.displayGroup({title:"",id:null})}>
-                Unsorted
-            </span>
-            <button className="btn btn-light float-sm-right" onClick={this.createGroupItem}>
-                <PlusCircleFill/>
-            </button>
+            <div>                
+                {this.state.groupList.map(item => (
+                    <li key={item.id.toString()} className={this.state.activeItem.id === item.id ? " active" : ""}>
+                        <a key={item.id.toString()} href="/#" onClick={() => this.displayGroup(item)}>
+                            {item.title}{" "}
+                            {this.state.activeItem.id === item.id ? (
+                                <div className="d-inline float-sm-right">
+                                    <PencilSquare onClick={() => this.editGroupItem(item)} className="mr-3"/>
+                                    <X onClick={() => this.handleGroupDelete(item)} />
+                                </div>
+                            ) : null}
+                        </a>
+                    </li>
+                ))}
+                <li className={this.state.activeItem.id === null ? "active" : ""}>
+                    <a href="/#" onClick={() => this.displayGroup({ title: "", id: null })}>
+                        Unsorted
+                    </a>
+                </li>                
             </div>
         );
     };
@@ -59,11 +61,11 @@ export default class GroupSideBar extends Component {
         this.setState({ addGroupModal: !this.state.addGroupModal });
     };
     handleGroupSubmit = item => {
-        this.toggleAddGroupModal();    
+        this.toggleAddGroupModal();
         if (item.id) {
             axios
-            .put(`api/groups_links/${item.id}/`, item)
-            .then(res => this.refreshList());
+                .put(`api/groups_links/${item.id}/`, item)
+                .then(res => this.refreshList());
             return;
         }
         axios
@@ -85,21 +87,26 @@ export default class GroupSideBar extends Component {
     render() {
         return (
             <div>
-                <div className="bg-light border-right" id="sidebar-wrapper">
-                    <div className="sidebar-header">
-                        <h1 className="text-uppercase my-4">Links app</h1>
-                    </div>
-                    <div className="list-group list-group-flush">
+                <div className="sidebar-heading">
+                    <h1 className="text-uppercase mt-4 mb-3">Links app</h1>
+                </div>
+                <div className="editor">
+                    <button className="btn btn-inverse" onClick={this.createGroupItem}>
+                        <PlusCircle />
+                    </button>
+                </div>
+                <div className="">
+                    <ul className="components px-0">
                         {this.renderTabList()}
-                    </div>
+                    </ul>
                 </div>
                 {this.state.addGroupModal ? (
-                <AddGroupModal
-                    activeItem={this.state.activeItem}
-                    toggle={this.toggleAddGroupModal}
-                    onSave={this.handleGroupSubmit}
-                />
-            ) : null}
+                    <AddGroupModal
+                        activeItem={this.state.activeItem}
+                        toggle={this.toggleAddGroupModal}
+                        onSave={this.handleGroupSubmit}
+                    />
+                ) : null}
             </div>
         );
     }

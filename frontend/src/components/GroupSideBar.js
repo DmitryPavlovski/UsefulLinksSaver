@@ -14,7 +14,8 @@ export default class GroupSideBar extends Component {
                 title: "",
                 id: null
             },
-            groupList: []
+            groupList: [],
+            dragOverItemId:""
         };
     }
     componentDidMount() {        
@@ -32,28 +33,44 @@ export default class GroupSideBar extends Component {
         const { setGroup } = this.props;
         return setGroup(item);
     };
+    drop = item =>{
+        this.props.drop(item);
+        this.setState({dragOverItemId : ""});
+    };
+    onDragOver = (item, event) =>{
+        event.preventDefault()
+        this.setState({dragOverItemId : item.id});
+    };
     renderTabList = () => {
-
         return (
-            <div>                
+            <div className="group-list">
                 {this.state.groupList.map(item => (
-                    <li key={item.id.toString()} className={this.state.activeItem.id === item.id ? " active" : ""}>
-                        <a key={item.id.toString()} href="/#" onClick={() => this.displayGroup(item)}>
-                            {item.title}{" "}
-                            {this.state.activeItem.id === item.id ? (
-                                <div className="d-inline float-sm-right">
-                                    <PencilSquare onClick={() => this.editGroupItem(item)} className="mr-3"/>
-                                    <X onClick={() => this.handleGroupDelete(item)} />
-                                </div>
-                            ) : null}
-                        </a>
-                    </li>
+                    <div key={item.id.toString()}
+                        onDrop={()=>{this.drop(item)}} 
+                        onDragOver={(event) => {this.onDragOver(item, event)}}
+                        className={this.state.dragOverItemId === item.id ? "dragOver" : ""}>
+                        <li  className={this.state.activeItem.id === item.id ? " active" : ""}>
+                            <a key={item.id.toString()} href="/#" onClick={() => this.displayGroup(item)}>
+                                {item.title}{" "}
+                                {this.state.activeItem.id === item.id ? (
+                                    <div className="d-inline float-sm-right">
+                                        <PencilSquare onClick={() => this.editGroupItem(item)} className="mr-3"/>
+                                        <X onClick={() => this.handleGroupDelete(item)} />
+                                    </div>
+                                ) : null}
+                            </a>
+                        </li>
+                    </div>
                 ))}
-                <li className={this.state.activeItem.id === null ? "active" : ""}>
-                    <a href="/#" onClick={() => this.displayGroup({ title: "", id: null })}>
-                        Unsorted
-                    </a>
-                </li>                
+                <div onDrop={()=>{this.drop({id: null})}} 
+                onDragOver={(event) => {this.onDragOver({id: null}, event)}}
+                className={this.state.dragOverItemId === null ? "dragOver" : ""}>
+                    <li className={this.state.activeItem.id === null ? "active" : ""}>
+                        <a href="/#" onClick={() => this.displayGroup({ title: "", id: null })}>
+                            Unsorted
+                        </a>
+                    </li>                    
+                </div>
             </div>
         );
     };
@@ -86,7 +103,7 @@ export default class GroupSideBar extends Component {
     };
     render() {
         return (
-            <div>
+            <div>                
                 <div className="sidebar-heading">
                     <h1 className="text-uppercase mt-4 mb-3">Links app</h1>
                 </div>
@@ -95,11 +112,11 @@ export default class GroupSideBar extends Component {
                         <PlusCircle />
                     </button>
                 </div>
-                <div className="">
+                <div className="group-box tabs-scroller">
                     <ul className="components px-0">
                         {this.renderTabList()}
                     </ul>
-                </div>
+                </div>                
                 {this.state.addGroupModal ? (
                     <AddGroupModal
                         activeItem={this.state.activeItem}

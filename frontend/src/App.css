@@ -25,18 +25,37 @@ a, a:hover, a:focus {
     background: #fff;
     border: none;
     border-radius: 0;
-    margin-bottom: 40px;
     justify-content: start !important;
 }
 
 .container-fluid{
     justify-content: start !important;
+    display: block !important;
+}
+.draging{
+    z-index: 1000;
+}
+
+.modal-backdrop-dnd{
+    height: 100%;
+    z-index: 990;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: #000;
+    opacity: 0.5;
 }
 
 .navbar-btn {
     box-shadow: none;
     outline: none !important;
     border: none;
+    text-align: center;
+}
+
+.row-button{
+    justify-content: center;
 }
 
 .line {
@@ -64,6 +83,11 @@ a, a:hover, a:focus {
     overflow: auto;
 }
 
+.group-box{
+    z-index: 1000;
+    position: relative;
+    background: #7386D5;
+}
 
 #sidebar {
     min-width: 250px;
@@ -95,6 +119,11 @@ a, a:hover, a:focus {
     display: block;
 }
 #sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+.dragOver{
     color: #7386D5;
     background: #fff;
 }
@@ -180,7 +209,10 @@ a.article, a.article:hover {
 #content.active .add-button {
     margin-left: 0px !important;
     font-size: smaller;
-    padding: initial;
+}
+
+.add-button-container {
+    text-align: center;
 }
 
 #content.active .list-group-item {

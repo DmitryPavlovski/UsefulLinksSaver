@@ -4,9 +4,9 @@ from .models import Link, GroupLinks
 class LinkSerializer(serializers.ModelSerializer):
   class Meta:
     model = Link
-    fields = ('id', 'title', 'description', 'groupId', 'url')
+    fields = ('id', 'title', 'description', 'groupId', 'url', 'createdOn')
 
 class GroupLinksSerializer(serializers.ModelSerializer):
   class Meta:
     model = GroupLinks
-    fields = ('id', 'title')
+    fields = ('id', 'title', 'createdOn')

@@ -11,7 +11,7 @@ import {
     Label
 } from "reactstrap";
 
-export default class AddGroupModal extends Component {
+export default class GroupModal extends Component {
     constructor(props) {
         super(props);
         this.state = {

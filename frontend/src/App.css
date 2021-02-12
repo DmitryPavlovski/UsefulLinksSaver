@@ -193,17 +193,17 @@ a.article, a.article:hover {
 }
 
 #content {
-    min-width: 10%;
-    max-width: 100%;  
+    width: 27%;
+    max-width: 17%;  
     transform-origin: bottom left;
     min-height: 100vh;
     transition: all 0.3s;
 }
 
 #content.active {
-    max-width: 0%;  
+    max-width: 10%;  
     transform-origin: bottom left;
-    min-height: 100vh;
+    min-height: 100%;
     transition: all 0.3s;
 }
 #content.active .add-button {

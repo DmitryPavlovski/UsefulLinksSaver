@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import AddLinkModal from "./components/AddLinkModal";
+import LinkModal from "./components/LinkModal";
 import GroupSideBar from "./components/GroupSideBar";
+import ContentNavBar from "./components/ContentNavBar";
 import axios from "axios";
-import { Trash, Eye, Pencil, ArrowBarRight, ArrowBarLeft, Window } from 'react-bootstrap-icons';
+import { Trash, Pencil, ArrowBarRight, ArrowBarLeft } from 'react-bootstrap-icons';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -17,12 +18,7 @@ class App extends Component {
                 title: "",
                 id: null
             },
-            activeItem: {
-                title: "",
-                description: "",
-                url: "",
-                groupId: ""
-            },
+            activeItem: {id: null},
             linkList: [],
             groupLinksList: [],
             ifraimeUrl: "",
@@ -37,11 +33,7 @@ class App extends Component {
         axios
             .get("api/links/")
             .then(res => this.setState({ linkList: res.data.sort(item => { return new Date() - new Date(item.createdOn)})}))
-            .catch(err => console.log(err));
-        axios
-            .get("api/groups_links/")
-            .then(res => this.setState({ groupLinksList: res.data }))
-            .catch(err => console.log(err));
+            .catch(err => console.log(err));        
     };
     displayGroup = item => {
         return this.setState({ activeGroupItem: item });
@@ -87,11 +79,11 @@ class App extends Component {
             </li>
         ));
     };
-    toggleAddLinkModal = () => {
-        this.setState({ addLinkModal: !this.state.addLinkModal });
+    toggleLinkModal = () => {
+        this.setState({ LinkModal: !this.state.LinkModal });
     };
     handleLinkSubmit = item => {
-        this.toggleAddLinkModal();
+        this.toggleLinkModal();
         if (item.id) {
             this.updateLink(item);
             return;
@@ -118,10 +110,10 @@ class App extends Component {
     }
     createLinkItem = () => {
         const item = { title: "", description: "", groupId: this.state.activeGroupItem.id, url: "" };
-        this.setState({ activeItem: item, addLinkModal: !this.state.addLinkModal });
+        this.setState({ activeItem: item, LinkModal: !this.state.LinkModal });
     };
     editLinkItem = item => {
-        this.setState({ activeItem: item, addLinkModal: !this.state.addLinkModal });
+        this.setState({ activeItem: item, LinkModal: !this.state.LinkModal });
     };
     sidebarCollapseClick = () => {
         this.setState({ sidebarActive: !this.state.sidebarActive })
@@ -140,9 +132,6 @@ class App extends Component {
         return (
             <main className={this.state.dragItem ? "drag" : ""}>                
                 <div className="wrapper">
-                    <div>
-                    
-                    </div>
                     <nav id="sidebar" className={this.state.sidebarActive ? "active" : ""}>
                         <GroupSideBar
                             setGroup={this.displayGroup}
@@ -152,42 +141,22 @@ class App extends Component {
                         {this.state.dragItem.id !== "" ?<div className="modal-backdrop-dnd"></div> : null}
                     </nav>
                     <div id="content" className={!this.state.contentActive ? " active" : ""}>
-                        <div className="navbar navbar-expand-lg navbar-light bg-light">
-                            <div className="container">
-
-                                <div className="row row-button d-flex justify-content-between">
-                                    <div className="col-3">
-                                        <button type="button" id="sidebarCollapse" className={`navbar-btn ${this.state.sidebarActive ? " active" : ""}`} onClick={this.sidebarCollapseClick}>
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
-                                        </button>
-                                    </div>
-                                    <div className="col-6 add-button-container">
-                                        <button onClick={this.createLinkItem} className="navbar-btn btn btn-primary add-button">
-                                            Add link
-                                        </button>
-                                    </div>
-                                    <div className="col-3">
-                                        <button className="navbar-btn btn float-sm-none" onClick={()=>{this.setState({ifraimeUrl:""})}}>
-                                            <Window/>
-                                        </button>
-                                    </div>
-                                    {/* <div className="d-inline">
-                                    </div> */}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="link-list tabs-scroller">
+                        <ContentNavBar 
+                            sidebarCollapseClick={this.sidebarCollapseClick}
+                            closePreview={() => { this.setState({ ifraimeUrl: "" }) }}
+                            sidebarActive={this.state.sidebarActive}
+                            contentActive={this.state.contentActive}
+                            activeGroupId={this.state.activeGroupItem.id}/>
+                        <div className="link-list">
                             <ul className="list-group list-group-flush">
                                 {this.renderItems()}
                             </ul>
                         </div>
-                        {this.state.addLinkModal ? (
-                            <AddLinkModal
+                        {this.state.LinkModal ? (
+                            <LinkModal
                                 activeItem={this.state.activeItem}
                                 groupLinksList={this.state.groupLinksList}
-                                toggle={this.toggleAddLinkModal}
+                                toggle={this.toggleLinkModal}
                                 onSave={this.handleLinkSubmit}
                             />
                         ) : null}

@@ -10,13 +10,14 @@ import {
     Input,
     Label
 } from "reactstrap";
+import axios from "axios";
 
-export default class AddLinkModal extends Component {
+export default class LinkModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeItem: this.props.activeItem,
-            groupList: this.props.groupLinksList
+            groupList: []
         };
     }
     handleChange = e => {
@@ -29,6 +30,12 @@ export default class AddLinkModal extends Component {
             <option key={item.id} value={item.id}>{item.title}</option>
         ));
     }
+    componentDidMount() {
+        axios
+            .get("api/groups_links/")
+            .then(res => this.setState({ groupList: res.data.sort(item => { return new Date() - new Date(item.createdOn) }) }))
+            .catch(err => console.log(err));
+    };
     render() {
         const { toggle, onSave } = this.props;
         return (

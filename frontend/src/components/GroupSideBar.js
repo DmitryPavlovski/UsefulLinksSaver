@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AddGroupModal from "./AddGroupModal";
+import GroupModal from "./GroupModal";
 import axios from "axios";
 import { PlusCircle, PencilSquare, X } from 'react-bootstrap-icons';
 import '../App.css';
@@ -118,7 +118,7 @@ export default class GroupSideBar extends Component {
                     </ul>
                 </div>                
                 {this.state.addGroupModal ? (
-                    <AddGroupModal
+                    <GroupModal
                         activeItem={this.state.activeItem}
                         toggle={this.toggleAddGroupModal}
                         onSave={this.handleGroupSubmit}

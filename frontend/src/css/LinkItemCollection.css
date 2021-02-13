@@ -1,0 +1,14 @@
+.list-group-item.active {
+    background-color: #8eb4f1;
+}
+
+#content.active .list-group-item {
+    margin-left: 0px !important;
+    font-size: smaller;
+    padding: initial;
+    overflow: hidden;
+}
+
+.draging{
+    z-index: 1000;
+}

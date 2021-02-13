@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import LinkModal from "./LinkModal";
 import { Window } from "react-bootstrap-icons";
 import axios from "axios";
+import "../css/ContentNavBar.css"
 
 export default class ContentNavBar extends Component {
     constructor(props) {

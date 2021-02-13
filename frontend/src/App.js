@@ -3,7 +3,7 @@ import LinkItemCollection from "./components/LinkItemCollection";
 import GroupSideBar from "./components/GroupSideBar";
 import ContentNavBar from "./components/ContentNavBar";
 import { ArrowBarRight, ArrowBarLeft } from 'react-bootstrap-icons';
-import './App.css';
+import './css/App.css';
 
 
 class App extends Component {

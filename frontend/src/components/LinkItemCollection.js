@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import LinkModal from "./LinkModal";
 import { Trash, Pencil } from 'react-bootstrap-icons';
 import axios from "axios";
+import "../css/LinkItemCollection.css"
 
 export default class LinkItemCollection extends Component {
     constructor(props) {
@@ -52,12 +53,12 @@ export default class LinkItemCollection extends Component {
     insertLink = item => {
         axios
             .post("api/links/", item)
-            .then(res => this.refreshList());
+            .then(() => this.refreshList());
     };
     handleLinkDelete = item => {
         axios
             .delete(`api/links/${item.id}`)
-            .then(res => this.refreshList());
+            .then(() => this.refreshList());
     };
     dragEnd = () => {
         this.setState({ dragItem: { id: "" } });
@@ -69,9 +70,10 @@ export default class LinkItemCollection extends Component {
     };
     drop = () => {
         const dragItem = { ...this.state.dragItem, groupId: this.props.dropGroupId };
-        this.updateLink(dragItem);
-        this.setState({ dragItem: { id: "" } });
-        this.props.onDragToggle();
+        if(this.state.dragItem.id !== ""){            
+            this.updateLink(dragItem);
+            this.setState({ dragItem: { id: "" } });
+        }
     };
     editLinkItem = item => {
         this.setState({ activeItem: item, isLinkModal: !this.state.isLinkModal });

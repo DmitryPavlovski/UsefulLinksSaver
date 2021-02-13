@@ -1,0 +1,42 @@
+.dragOver{
+    color: #7386D5;
+    background: #fff;
+}
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #3854d1;
+}
+.group-box{
+    z-index: 1000;
+    position: relative;
+    background: #7386D5;
+}
+.editor {
+    border-bottom: 1px solid rgb(255, 255, 255);
+    border-top: 1px solid rgb(255, 255, 255);
+}
+
+#sidebar .btn-inverse:hover {    
+    color: white;
+    background: #3854d1;
+}
+#sidebar .btn-inverse {    
+    color: white;
+}

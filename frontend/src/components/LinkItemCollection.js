@@ -25,8 +25,7 @@ export default class LinkItemCollection extends Component {
         if (prevProps.isNeedRefreshLinks !== this.props.isNeedRefreshLinks){
             this.refreshList();
         }
-    }
-
+    };
     refreshList = () => {
         axios
             .get("api/links/")

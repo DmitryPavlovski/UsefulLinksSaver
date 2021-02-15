@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import GroupModal from "./GroupModal";
 import axios from "axios";
 import { PlusCircle, PencilSquare, X } from 'react-bootstrap-icons';
-//import '../App.css';
 import '../css/GroupSideBar.css';
 
 export default class GroupSideBar extends Component {

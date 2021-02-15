@@ -47,7 +47,7 @@ export default class ContentNavBar extends Component {
                             </button>
                         </div>
                         <div className={`add-button-container ${this.props.isContentActive ? "col-7" : "col-9 px-0 pl-4"}`}>
-                            <button onClick={this.createLinkItem} className="navbar-btn btn btn-primary add-button">
+                            <button onClick={this.createLinkItem} className="navbar-btn btn btn-primary add-button px-2">
                                 Add link
                             </button>
                         </div>

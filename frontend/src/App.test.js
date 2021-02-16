@@ -12,7 +12,7 @@ const server = setupServer(
     return res(ctx.json([{id:1,title:"Test",description:"",groupId:null,url:"",createdOn:"2021-02-04T08:02:17.029208Z"}]))
   }),
   rest.get('/api/groups_links/', (req, res, ctx) => {
-    return res(ctx.json([{id:1, title:"Test", description:"", createdOn:"2021-02-04T08:02:17.029208Z"}]))
+    return res(ctx.json([{id:1, title:"Test", createdOn:"2021-02-04T08:02:17.029208Z"}]))
   })
 );
 

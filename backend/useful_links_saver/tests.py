@@ -80,3 +80,74 @@ class LinkViewTestCase(APITestCase):
 
         self.assertEqual(response_delete.status_code, status.HTTP_204_NO_CONTENT)
         self.assertNotEqual(old_count, new_count)
+
+        
+class GroupViewTestCase(APITestCase):
+    """Test suite for the group api views."""
+
+    def setUp(self):
+        """Define the test client and other test variables."""
+        self.client = APIClient()
+        self.group_data = { 'title': 'Test Group'}
+
+    def test_api_can_get_group_list(self):
+        """Test on get groups api method."""
+        old_get_response = self.client.get(
+            '/api/groups_links',
+            follow=True)
+        
+        GroupLinks.objects.create(
+            title=self.group_data['title'])
+        
+        new_get_response = self.client.get(
+            '/api/groups_links',
+            follow=True)
+        self.assertNotEqual(len(old_get_response.data), len(new_get_response.data))
+
+    def test_api_can_create_group(self):
+        """Test the api can create new group."""        
+        old_count = len(GroupLinks.objects.all())
+        response_insert = self.client.post(
+            '/api/groups_links/',
+            data=json.dumps(self.group_data),
+            follow=True,
+            content_type='application/json')
+        new_count = len(GroupLinks.objects.all())
+        self.assertEqual(response_insert.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(old_count, new_count)
+
+    def test_api_can_update_group(self):
+        """Test the api can update a group"""
+        group = GroupLinks.objects.create(
+            title=self.group_data['title'])
+
+        new_group_data = {}
+        new_group_data['title'] = 'New test title'
+
+        response_update = self.client.put(
+            '/api/groups_links/{}/'.format(group.id),
+            data=json.dumps(new_group_data),
+            follow=True,
+            content_type='application/json')        
+        updated_group = GroupLinks.objects.get(id=group.id)
+
+        self.assertEqual(response_update.status_code, status.HTTP_200_OK)
+        self.assertEqual(group.title, self.group_data['title'])
+        self.assertEqual(updated_group.title, new_group_data['title'])
+        self.assertNotEqual(updated_group.title, group.title)
+
+    def test_api_can_delete_group(self):
+        """Test the api can delete a group"""
+        group = GroupLinks.objects.create(
+            title=self.group_data['title'])
+
+        old_count = len(GroupLinks.objects.all())
+
+        response_delete = self.client.delete(
+            '/api/groups_links/{}/'.format(group.id),            
+            follow=True)
+
+        new_count = len(GroupLinks.objects.all())
+
+        self.assertEqual(response_delete.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertNotEqual(old_count, new_count)

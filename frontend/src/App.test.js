@@ -22,7 +22,7 @@ afterAll(() => server.close())
 
 test('renders Links app link', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Links app/i);
+  const linkElement = screen.getByText(/Useful Links Saver/i);
   expect(linkElement).toBeInTheDocument();
 });
 

@@ -101,7 +101,7 @@ export default class GroupSideBar extends Component {
         return (
             <div>
                 <div className="sidebar-heading">
-                    <h1 className="text-uppercase mt-4 mb-3">Links app</h1>
+                    <h1 className="mt-2 mb-3">Useful Links Saver</h1>
                 </div>
                 <div className="editor">
                     <button className="btn btn-inverse" onClick={this.createGroupItem}>

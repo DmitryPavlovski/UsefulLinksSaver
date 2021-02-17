@@ -2,7 +2,7 @@
 
 ## Description
   The application is designed for comfortable using and saving browser's tabs, when you often have a lot of tabs.
-  There are spliting tabs on group, comfortable control of movement between groups, preview site, adding group and tabs in the web application.
+  There are sorting tabs on group, comfortable control of movement between groups, preview site, adding group and tabs in the web application.
 
 ## Stack
 
@@ -25,8 +25,11 @@
 ![dnd](./Screenshots/dragAndDrop.png)
 
 ## Steps
-    sodo apt-get install python3 python3-pip nodejs npm postgresql postgresql-contrib
+### Install required components
+    sudo apt-get install python3 python3-pip nodejs npm postgresql postgresql-contrib
     pip install pipenv
+
+### Creare user and database
     sudo -u postgres psql
     CREATE DATABASE "Useful_links_db";
     CREATE USER "Useful_links_db_user" WITH PASSWORD 'Useful_links_db_user';
@@ -35,20 +38,24 @@
     ALTER ROLE "Useful_links_db_user" SET timezone TO 'UTC';
     GRANT ALL PRIVILEGES ON DATABASE "Useful_links_db" TO "Useful_links_db_user";
     \q
+
+### Install application
     git clone https://github.com/DmitryPavlovsky/UsefulLinksSaver.git
     cd UsefulLinkSaver/
     pipenv install --three
     pipenv shell
     cd backend
+    python manage.py makemigrations
+    python manage.py migrate
     python manage.py runserver
     cd ../frontend/
-    npm install
+    npm install 
     npm start
 
-### for run frontend test 
+### Run frontend test 
     cd frontend
     npm test
 
-### for run backend test 
+### Run backend test 
     cd backend
     python manage.py test
